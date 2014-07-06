@@ -28,55 +28,111 @@ void TensionLipo::begin(){
 float TensionLipo::Tension_Lipo1 (){
   static float MV1 = 0.0; //4.20;
   static float MV2 = 0.0;
-  float MV3;
+  static float MV3 = 0.0;
+  static float MV4 = 0.0;
+  static float MV5 = 0.0;
+  static float MV6 = 0.0;
+  static float MV7 = 0.0;
+  static float MV8 = 0.0;
+  static float MV9 = 0.0;
+  float MV10;
   float val;
   
-  MV3 =  mesure(A0)* COEF_LIPO1;
-  val = (MV1 + MV2 + MV3) / 3; // filter (average of 3 samples)
+  MV10 =  mesure(A0)* COEF_LIPO1;
+  val = (MV1 + MV2 + MV3 + MV4 + MV5 + MV6 + MV7 + MV8 + MV9 + MV10) / 10; // filter (average of 10 samples)
   MV1 = MV2; // shift
   MV2 = MV3;
+  MV3 = MV4;
+  MV4 = MV5;
+  MV5 = MV6;
+  MV6 = MV7;
+  MV7 = MV8;
+  MV8 = MV9;
+  MV9 = MV10;
   
   return val;
 }
 
 float TensionLipo::Tension_Lipo2 (){
-  static float MV1 = 0.0;
+  static float MV1 = 0.0; //4.20;
   static float MV2 = 0.0;
-  float MV3;
+  static float MV3 = 0.0;
+  static float MV4 = 0.0;
+  static float MV5 = 0.0;
+  static float MV6 = 0.0;
+  static float MV7 = 0.0;
+  static float MV8 = 0.0;
+  static float MV9 = 0.0;
+  float MV10;
   float val;
   
-  MV3 =  mesure(A1)* COEF_LIPO2;
-  val = (MV1 + MV2 + MV3) / 3; // filter (average of 3 samples)
+  MV10 =  mesure(A1)* COEF_LIPO2;
+  val = (MV1 + MV2 + MV3 + MV4 + MV5 + MV6 + MV7 + MV8 + MV9 + MV10) / 10; // filter (average of 10 samples)
   MV1 = MV2; // shift
   MV2 = MV3;
+  MV3 = MV4;
+  MV4 = MV5;
+  MV5 = MV6;
+  MV6 = MV7;
+  MV7 = MV8;
+  MV8 = MV9;
+  MV9 = MV10;
   
   return val;  
 }
 
 float TensionLipo::Tension_Lipo3 (){
-  static float MV1 = 0.0;
+  static float MV1 = 0.0; //4.20;
   static float MV2 = 0.0;
-  float MV3;
+  static float MV3 = 0.0;
+  static float MV4 = 0.0;
+  static float MV5 = 0.0;
+  static float MV6 = 0.0;
+  static float MV7 = 0.0;
+  static float MV8 = 0.0;
+  static float MV9 = 0.0;
+  float MV10;
   float val;
   
-  MV3 =  mesure(A2)* COEF_LIPO3;
-  val = (MV1 + MV2 + MV3) / 3; // filter (average of 3 samples)
+  MV10 =  mesure(A2)* COEF_LIPO3;
+  val = (MV1 + MV2 + MV3 + MV4 + MV5 + MV6 + MV7 + MV8 + MV9 + MV10) / 10; // filter (average of 10 samples)
   MV1 = MV2; // shift
   MV2 = MV3;
+  MV3 = MV4;
+  MV4 = MV5;
+  MV5 = MV6;
+  MV6 = MV7;
+  MV7 = MV8;
+  MV8 = MV9;
+  MV9 = MV10;
   
   return val;  
 }
 
 float TensionLipo::Tension_Lipo4 (){
-  static float MV1 = 0.0;
+  static float MV1 = 0.0; //4.20;
   static float MV2 = 0.0;
-  float MV3;
+  static float MV3 = 0.0;
+  static float MV4 = 0.0;
+  static float MV5 = 0.0;
+  static float MV6 = 0.0;
+  static float MV7 = 0.0;
+  static float MV8 = 0.0;
+  static float MV9 = 0.0;
+  float MV10;
   float val;
   
-  MV3 =  mesure(A3)* COEF_LIPO4;
-  val = (MV1 + MV2 + MV3) / 3; // filter (average of 3 samples)
+  MV10 =  mesure(A3)* COEF_LIPO4;
+  val = (MV1 + MV2 + MV3 + MV4 + MV5 + MV6 + MV7 + MV8 + MV9 + MV10) / 10; // filter (average of 10 samples)
   MV1 = MV2; // shift
   MV2 = MV3;
+  MV3 = MV4;
+  MV4 = MV5;
+  MV5 = MV6;
+  MV6 = MV7;
+  MV7 = MV8;
+  MV8 = MV9;
+  MV9 = MV10;
   
   return val;  
 }
@@ -116,7 +172,7 @@ uint8_t TensionLipo::Detect () {
   uint8_t nb_Lipo = 2;  // Minimum: 2S default.
   
   // We begin by reading cans to initialize filters
-  for (uint8_t index = 0; index < 2; index++)
+  for (uint8_t index = 0; index < 10; index++)
   {  
     val = TensionLipo::Tension_Lipo1 (); // Measurement element 1
     val = TensionLipo::Tension_Lipo2 (); // Measurement element 2
@@ -176,6 +232,8 @@ float TensionLipo::Lipo_Mini (uint8_t nb_Lipo,float L1,float L2,float L3,float L
 
 // Voltage measurement (CAN)
 uint16_t TensionLipo::mesure(uint8_t pin){
+  //analogRead(pin);
+  //delay(25);
   uint16_t val = analogRead(pin); 
   return val;
 }
