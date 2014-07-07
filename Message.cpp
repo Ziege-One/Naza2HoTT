@@ -321,7 +321,7 @@ void GMessage::main_loop(){
                     hott_gps_msg->distance = gps_dist; 
                     hott_gps_msg->altitude = gps_alt_m - home_altitude + 500; // offset 500 Graupner
                     //hott_gps_msg->climbrate1s = 30000  + (altitude_table[0] - altitude_table[1])*100 ;
-                    hott_gps_msg->climbrate1s = 30000 + gps_climb_speed;
+                    hott_gps_msg->climbrate1s = 30000 + (gps_climb_speed * 100);
                     hott_gps_msg->climbrate3s = 120  + (altitude_table[0] - altitude_table[3]) ;
                     hott_gps_msg->GPSNumSat = gps_numsats ; 
                     hott_gps_msg->GPS_fix =  0x33;                   // Dgps: '0x44' 2D = '0x32' 3D = '0x33' nofix = '0x2d'
@@ -354,7 +354,7 @@ void GMessage::main_loop(){
                     hott_gps_msg->distance = gps_dist; 
                     hott_gps_msg->altitude = gps_alt_m - home_altitude + 500; // offset 500 Graupner
                     //hott_gps_msg->climbrate1s = 30000  + (altitude_table[0] - altitude_table[1])*100 ;
-                    hott_gps_msg->climbrate1s = 30000 + gps_climb_speed;
+                    hott_gps_msg->climbrate1s = 30000 + (gps_climb_speed * 100);
                     hott_gps_msg->climbrate3s = 120  + (altitude_table[0] - altitude_table[3]) ;
                     hott_gps_msg->GPSNumSat = gps_numsats ; 
                     hott_gps_msg->GPS_fix =  0x44; // Dgps: '0x44' 2D = '0x32' 3D = '0x33' nofix = '0x2d'
@@ -434,8 +434,8 @@ void GMessage::main_loop(){
                setVoltage2(0);                      // not use
               
             // Use values of the GPS
-               setAltitudeInMeters (gps_alt_m);     // use gps infos
-               setClimbrate(30000+gps_climb_speed); // use gps infos
+               setAltitudeInMeters (gps_alt_m - home_altitude);     // use gps infos
+               setClimbrate(30000+(gps_climb_speed * 100)); // use gps infos
                setSpeed(gps_speed);                 // use gps infos
 
             // Voltage Measurement
