@@ -138,7 +138,7 @@ uint32_t gps_dist = 0000;
 uint32_t gps_dist_max = 0000;
 
 bool is_set_home = 0;
-int set_home_loop = 20000;
+int set_home_loop = 20000; //20000 about 4 seconds wait to set Homepiont
 
 GMessage::GMessage(){
 
@@ -282,7 +282,7 @@ void GMessage::main_loop(){
                     hott_gps_msg->alarmInverse1 = 1; // invers DIST. OSD
                     hott_gps_msg->alarmInverse2 = 1; // invers COORD OSD
                     // RADIO VOICE ALARM
-                    //sbgdfdsfdfdfdsfdsfdsfdsfdsfdsf            dsfdsfdsfds           dsfdsfdsfds hott_gps_msg->warning_beeps = 0x08; // no fix! so beep and voice alarm
+                    hott_gps_msg->warning_beeps = 0x08; // no fix! so beep and voice alarm
                     break;
                     
                   case 2 : // FIX_2D = '0x32'
