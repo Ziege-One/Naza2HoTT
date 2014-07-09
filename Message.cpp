@@ -138,6 +138,7 @@ uint32_t gps_dist = 0000;
 uint32_t gps_dist_max = 0000;
 
 bool is_set_home = 0;
+int set_home_loop = 20000;
 
 GMessage::GMessage(){
 
@@ -205,7 +206,7 @@ void GMessage::init_vario_msg(){
   hott_vario_msg->endByte = 0x7d;
 }*/
 
-// Emission de la trame
+// Sending the frame
 void GMessage::send(int lenght){ 
   uint8_t sum = 0;
   hottV4EnableTransmitterMode(); 
@@ -242,7 +243,11 @@ void GMessage::main_loop(){
     lon_home_S = lon_S;
     lon_home_SS = lon_SS;
     home_altitude = gps_alt_m;
-    is_set_home = 1;
+    if (set_home_loop == 0)
+      {
+      is_set_home = 1;
+      }
+    set_home_loop--;  
   }
   
   if(SERIAL_HOTT.available() >= 2) {
@@ -277,7 +282,7 @@ void GMessage::main_loop(){
                     hott_gps_msg->alarmInverse1 = 1; // invers DIST. OSD
                     hott_gps_msg->alarmInverse2 = 1; // invers COORD OSD
                     // RADIO VOICE ALARM
-                    hott_gps_msg->warning_beeps = 0x08; // no fix! so beep and voice alarm
+                    //sbgdfdsfdfdfdsfdsfdsfdsfdsfdsf            dsfdsfdsfds           dsfdsfdsfds hott_gps_msg->warning_beeps = 0x08; // no fix! so beep and voice alarm
                     break;
                     
                   case 2 : // FIX_2D = '0x32'
@@ -817,7 +822,7 @@ void GMessage::main_loop(){
                     //line 3:
                     snprintf((char *)&hott_txt_msg->text[3],21,"E %id %i' %i.%i\"",lon_D,lon_M,lon_S,lon_SS);
                     //line 4:
-                    snprintf((char *)&hott_txt_msg->text[4],21,"Start Position:");
+                    snprintf((char *)&hott_txt_msg->text[4],21,"Start Position: %s", is_set_home ? "OK" : "NO");
                     //line 5: 
                     snprintf((char *)&hott_txt_msg->text[5],21,"N %id %i' %i.%i\"",lat_home_D,lat_home_M,lat_home_S,lat_home_SS);
                     //line 6:
