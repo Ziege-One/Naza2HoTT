@@ -10,7 +10,8 @@
 #include "Tension_Lipo.h"
 
 void TensionLipo::begin(){
-   analogReference(DEFAULT); // alim reference. 5V
+   //analogReference(DEFAULT); // alim reference. 5V
+   analogReference(INTERNAL); // alim reference. 1.1V
    digitalWrite(A0, LOW); 
    pinMode(A0, INPUT);
    digitalWrite(A1, LOW); 

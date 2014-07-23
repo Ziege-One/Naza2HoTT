@@ -11,6 +11,10 @@
 #define LEDPIN_OFF              PORTB &= ~(1<<5);
 #define LEDPIN_ON               PORTB |= (1<<5);
 
+// Module define
+#define GPS                             // GPS Modul
+#define GAM                             // GAM Modul
+
 #include "Message.h"
 #include "Tension_Lipo.h"
 #include <EEPROM.h>
@@ -260,6 +264,7 @@ void GMessage::main_loop(){
         // Demande RX Module =	$80 $XX
         switch (octet2) {
         
+          #ifdef GPS
           case HOTT_TELEMETRY_GPS_SENSOR_ID: //0x8A
           {  
           //LEDPIN_ON
@@ -400,6 +405,7 @@ void GMessage::main_loop(){
           //LEDPIN_OFF  
               break;
           }
+          #endif
           
         /*case HOTT_TELEMETRY_VARIO_SENSOR_ID: //0x89
           {  
@@ -425,6 +431,7 @@ void GMessage::main_loop(){
           }
          */
         
+        #ifdef GAM
         case HOTT_TELEMETRY_GAM_SENSOR_ID: //0x8D
           {    
                LEDPIN_ON
@@ -641,6 +648,7 @@ void GMessage::main_loop(){
             send(sizeof(struct HOTT_GAM_MSG));
             break;
           } //end case GAM*/
+          #endif
         } //end case octet 2
         break;
       }
@@ -1333,8 +1341,8 @@ void GMessage::debug(){
     Serial.print("D:"); Serial.print(lon_D);
     Serial.print("M:"); Serial.print(lon_M);
     Serial.print("S:"); Serial.print(lon_S); Serial.print(".");Serial.println(lon_SS);
-    Serial.print("Lipo 1:"); Serial.print(tension.Tension_Lipo1());Serial.println("V");
-    Serial.print("Lipo 2:"); Serial.print(tension.Tension_Lipo2());Serial.println("V");
-    Serial.print("Lipo 3:"); Serial.print(tension.Tension_Lipo3());Serial.println("V");
-    Serial.print("Lipo 4:"); Serial.print(tension.Tension_Lipo4());Serial.println("V");
+    Serial.print("Lipo 1:"); Serial.print(tension.Tension_Lipo1());Serial.print("V = digit:");Serial.println(tension.Tension_Lipo1()/COEF_LIPO1);
+    Serial.print("Lipo 2:"); Serial.print(tension.Tension_Lipo2());Serial.print("V = digit:");Serial.println(tension.Tension_Lipo2()/COEF_LIPO2);
+    Serial.print("Lipo 3:"); Serial.print(tension.Tension_Lipo3());Serial.print("V = digit:");Serial.println(tension.Tension_Lipo3()/COEF_LIPO3);
+    Serial.print("Lipo 4:"); Serial.print(tension.Tension_Lipo4());Serial.print("V = digit:");Serial.println(tension.Tension_Lipo4()/COEF_LIPO4);
 }

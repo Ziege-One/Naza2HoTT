@@ -11,13 +11,14 @@
 // Coefficient calculation measures based on resistances 
 // COEF = (VREF/1024) / (R2/(R1 + R2)) 
 // VREF = 5V (internal Creference) 5/1024=0.0048828125
+// VREF = 1,1V (reference interne) 1,1/1024=0.0010742
 //
 // I USE THE HARDWARE SCHEME OF THYZOON
 //
-#define COEF_LIPO1 0.0242230  // R11 = 3.83K     R21 = 1.0K
-#define COEF_LIPO2 0.0454897  // R12 = 7.87K     R22 = 1.0K
-#define COEF_LIPO3 0.0644017  // R13 = 11.8K     R23 = 1.0K 
-#define COEF_LIPO4 0.0851941  // R14 = 15.8K     R24 = 1.0K
+#define COEF_LIPO1 0.0049656  // R11 = 3.83K     R21 = 1.0K
+#define COEF_LIPO2 0.0093464  // R12 = 7.87K     R22 = 1.0K
+#define COEF_LIPO3 0.0132308  // R13 = 11.8K     R23 = 1.0K 
+#define COEF_LIPO4 0.0174344  // R14 = 15.8K     R24 = 1.0K
 #define COEF_LIPO5 0.0        // R15 = 0K        R25 = 0K 
 #define COEF_LIPO6 0.0        // R16 = 0K        R26 = 0K 
 
