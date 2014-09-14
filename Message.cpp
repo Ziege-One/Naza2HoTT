@@ -116,7 +116,7 @@ uint16_t lon_home_SS=0;
 uint16_t lon_hott_M=0;
 uint32_t lon_hott_S=0;
 
-uint8_t gps_alt_m=9999;
+uint16_t gps_alt_m=9999;
 short gps_hdop_cm=0;
 short gps_vdop_cm=0;
 float gps_speed=0;
