@@ -810,8 +810,8 @@ void GMessage::main_loop(){
                     else if (id_key == HOTT_KEY_DOWN && ligne_edit == -1)
                     ligne_select = max(4,ligne_select-1); // never gets above line 4 min
                     else if (id_key == HOTT_KEY_SET && ligne_edit == -1)
-                    ligne_edit =  ligne_select ;
-                    
+                    //ligne_edit =  ligne_select ;
+                    is_set_home = 0;
                     else if (id_key == HOTT_KEY_RIGHT && ligne_edit == -1)
                       {
                         if (page_settings >=4)// change it if you want more pages
@@ -822,7 +822,7 @@ void GMessage::main_loop(){
 
                     // Showing page 1
                     //line 0:
-                    snprintf((char *)&hott_txt_msg->text[0],21,"GPS  DJI  NAZA");
+                    snprintf((char *)&hott_txt_msg->text[0],21,"GPS NAZA / %s", is_set_home ? "Home set" : "Home ?");
                     //line 1:
                     snprintf((char *)&hott_txt_msg->text[1],21,"Current Position:");
                     //line 2:
@@ -866,11 +866,11 @@ void GMessage::main_loop(){
                     else if (id_key == HOTT_KEY_DOWN && ligne_edit == -1)
                     ligne_select = max(4,ligne_select-1); // never gets above line 4 min
                     else if (id_key == HOTT_KEY_SET && ligne_edit == -1)
-                    ligne_edit =  ligne_select ;
-                    
+                    //ligne_edit =  ligne_select ;
+                    is_set_home = 0;
                     // Showing page 2 settings
                     //line 0:                                  
-                    snprintf((char *)&hott_txt_msg->text[0],21,"GPS  DJI  NAZA");
+                    snprintf((char *)&hott_txt_msg->text[0],21,"GPS NAZA / %s", is_set_home ? "Home set" : "Home ?");
                     //line 1:
                     snprintf((char *)&hott_txt_msg->text[1],21,"Dist. Current: %im",(int) gps_dist);
                     //line 2:
@@ -915,11 +915,11 @@ void GMessage::main_loop(){
                     else if (id_key == HOTT_KEY_DOWN && ligne_edit == -1)
                     ligne_select = max(4,ligne_select-1); // never gets above line 4 min
                     else if (id_key == HOTT_KEY_SET && ligne_edit == -1)
-                    ligne_edit =  ligne_select ;
-                    
+                    //ligne_edit =  ligne_select ;
+                    is_set_home = 0;
                     // Showing page 3 settings
                     //line 0:                                  
-                    snprintf((char *)&hott_txt_msg->text[0],21,"GPS  DJI  NAZA");
+                    snprintf((char *)&hott_txt_msg->text[0],21,"GPS NAZA / %s", is_set_home ? "Home set" : "Home ?");
                     //line 1:
                     snprintf((char *)&hott_txt_msg->text[1],21,"Altitude    : %i",gps_alt_m);
                     //line 2:
@@ -964,11 +964,11 @@ void GMessage::main_loop(){
                     else if (id_key == HOTT_KEY_DOWN && ligne_edit == -1)
                     ligne_select = max(4,ligne_select-1); // never gets above line 4 min
                     else if (id_key == HOTT_KEY_SET && ligne_edit == -1)
-                    ligne_edit =  ligne_select ;
-                    
+                    //ligne_edit =  ligne_select ;
+                    is_set_home = 0;
                     // Showing page 4 settings
                     //line 0:                                  
-                    snprintf((char *)&hott_txt_msg->text[0],21,"GPS  DJI  NAZA");
+                    snprintf((char *)&hott_txt_msg->text[0],21,"GPS NAZA / %s", is_set_home ? "Home set" : "Home ?");
                     //line 1:
                     snprintf((char *)&hott_txt_msg->text[1],21,"%i.%i.20%i  %i:%i:%i",gps_day,gps_month,gps_year,gps_hour,gps_minute,gps_second);
                     //line 2:
