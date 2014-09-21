@@ -1,6 +1,6 @@
 /*
   DJI Naza (v1, v1 Lite, V2) data decoder library
-  (c) Pawelsky 20140628
+  (c) Pawelsky 20140921
   Not for commercial use
 
   Refer to naza_decoder_wiring.jpg diagram for proper connection
@@ -21,7 +21,7 @@ NazaDecoderLib::NazaDecoderLib()
   msgLen = 0;
   cs1 = 0;
   cs2 = 0;
- // startPwmReader();
+  //startPwmReader();
 }
 
 int32_t NazaDecoderLib::decodeLong(uint8_t idx, uint8_t mask)
@@ -122,7 +122,7 @@ uint8_t NazaDecoderLib::decode(int input)
       if(x < magXMin) magXMin = x;
       if(y > magYMax) magYMax = y;
       if(y < magYMin) magYMin = y;
-      headingNc = atan2(y - ((magYMax + magYMin) / 2), x - ((magXMax + magXMin) / 2)) * 180.0 / M_PI;
+      headingNc = -atan2(y - ((magYMax + magYMin) / 2), x - ((magXMax + magXMin) / 2)) * 180.0 / M_PI;
       if(headingNc < 0) headingNc += 360.0; 
     }
     return msgId;

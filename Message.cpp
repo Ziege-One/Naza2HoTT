@@ -1217,7 +1217,7 @@ void GMessage::decode_gps_naza() {
         break;
         
       case NAZA_MESSAGE_COMPASS:
-          gps_heading_d = 360 - (NazaDecoder.getHeadingNc());      // Get Heading (COMPASS) in degrees
+          gps_heading_d = NazaDecoder.getHeadingNc();      // Get Heading (COMPASS) in degrees
         break;
     }
   }
