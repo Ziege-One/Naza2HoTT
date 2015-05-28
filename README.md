@@ -12,6 +12,10 @@ Naza2HoTT is a standalone Arduino based Application that acts as a HoTTv4 capabl
 
 *circuit diagram*
 
+![alt tag](https://github.com/Ziege-One/naza2hott/blob/master/Daten/naza_decoder_hott_wiring%20-%20V2.jpg)
+
+![alt tag](https://github.com/Ziege-One/naza2hott/blob/master/Daten/Lipo_wiring.jpg)
+
 Forum entry on fpv-community http://fpv-community.de/showthread.php?47104-Naza2HoTT-Telemetrie-Adapter
 
 *It is Based on:*
