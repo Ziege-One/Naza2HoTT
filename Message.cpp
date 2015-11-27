@@ -44,6 +44,7 @@ static uint8_t _hott_serial_buffer[173];   //creating a buffer variable to store
 
 // pointer to the buffer structures "_hott_serial_buffer"
 struct HOTT_GAM_MSG     *hott_gam_msg = (struct HOTT_GAM_MSG *)&_hott_serial_buffer[0];
+struct HOTT_EAM_MSG     *hott_eam_msg = (struct HOTT_EAM_MSG *)&_hott_serial_buffer[0];
 struct HOTT_TEXTMODE_MSG	*hott_txt_msg =	(struct HOTT_TEXTMODE_MSG *)&_hott_serial_buffer[0];
 struct HOTT_GPS_MSG  *hott_gps_msg = (struct HOTT_GPS_MSG *)&_hott_serial_buffer[0];
 struct HOTT_VARIO_MSG  *hott_vario_msg = (struct HOTT_VARIO_MSG *)&_hott_serial_buffer[0];
@@ -190,6 +191,15 @@ void GMessage::init_gam_msg(){
   hott_gam_msg->gam_sensor_id = HOTT_TELEMETRY_GAM_SENSOR_ID;
   hott_gam_msg->sensor_id = 0xd0;
   hott_gam_msg->stop_byte = 0x7d;
+}
+
+void GMessage::init_eam_msg(){
+  //puts to all Zero, then modifies the constants
+  memset(hott_eam_msg, 0, sizeof(struct HOTT_EAM_MSG));   
+  hott_eam_msg->start_byte = 0x7c;
+  hott_eam_msg->eam_sensor_id = HOTT_TELEMETRY_EAM_SENSOR_ID;
+  hott_eam_msg->sensor_id = 0xe0;
+  hott_eam_msg->stop_byte = 0x7d;
 }
 
 void GMessage::init_gps_msg(){
@@ -419,17 +429,48 @@ void GMessage::main_loop(){
           }
          */
          
-        /*case HOTT_TELEMETRY_GEA_SENSOR_ID: //0x89
+        case HOTT_TELEMETRY_EAM_SENSOR_ID: //0x8E
           {  
-			  LEDPIN_ON
-			  //init_gea_msg();
-			  
-			  
-			  //send(sizeof(struct HOTT_GEA_MSG));
-			  LEDPIN_OFF
+		  LEDPIN_ON
+
+                  // init structure
+		  init_eam_msg();
+
+                  hott_eam_msg->cell_L[1] = 0 ; 			    //#7 Volt Cell_L 1 (in 2 mV increments, 210 == 4.20 V)
+                  hott_eam_msg->cell_L[2] = 0 ;			            //#8 Volt Cell_L 2 (in 2 mV increments, 210 == 4.20 V)
+                  hott_eam_msg->cell_L[3] = 0 ;			            //#9 Volt Cell_L 3 (in 2 mV increments, 210 == 4.20 V)
+                  hott_eam_msg->cell_L[4] = 0 ;			            //#10 Volt Cell_L 4 (in 2 mV increments, 210 == 4.20 V)
+                  hott_eam_msg->cell_L[5] = 0 ;			            //#11 Volt Cell_L 5 (in 2 mV increments, 210 == 4.20 V)
+                  hott_eam_msg->cell_L[6] = 0 ;			            //#12 Volt Cell_L 6 (in 2 mV increments, 210 == 4.20 V)
+                  hott_eam_msg->cell_L[7] = 0 ;                             //#13 Volt Cell_L 7 (in 2 mV increments, 210 == 4.20 V)
+                  hott_eam_msg->cell_H[1] = 0 ;			            //#14 Volt Cell_L 1 (in 2 mV increments, 210 == 4.20 V)
+                  hott_eam_msg->cell_H[2] = 0 ;			            //#15 Volt Cell_H 2 (in 2 mV increments, 210 == 4.20 V)
+                  hott_eam_msg->cell_H[3] = 0 ;			            //#16 Volt Cell_H 3 (in 2 mV increments, 210 == 4.20 V)
+                  hott_eam_msg->cell_H[4] = 0 ;			            //#17 Volt Cell_H 4 (in 2 mV increments, 210 == 4.20 V)
+                  hott_eam_msg->cell_H[5] = 0 ;			            //#18 Volt Cell_H 5 (in 2 mV increments, 210 == 4.20 V)
+                  hott_eam_msg->cell_H[6] = 0 ;			            //#19 Volt Cell_H 6 (in 2 mV increments, 210 == 4.20 V)
+                  hott_eam_msg->cell_H[7] = 0 ;                             //#20 Volt Cell_H 7 (in 2 mV increments, 210 == 4.20 V)   
+                  hott_eam_msg->Battery1 = Lipo_total * 10 ;                //#21 LSB battery 1 voltage LSB value. 0.1V steps. 50 = 5.5V only pos. voltages
+                  hott_eam_msg->Battery2 = 0 ;                              //#23 LSB battery 2 voltage LSB value. 0.1V steps. 50 = 5.5V only pos. voltages
+                  hott_eam_msg->temperature1 = 20 ;                         //#25 Temperature 1. Offset of 20. a value of 20 = 0°C
+                  hott_eam_msg->temperature2 = 20 ;                         //#26 Temperature 2. Offset of 20. a value of 20 = 0°C
+                  hott_eam_msg->altitude = gps_alt_m - home_altitude + 500 ;//#27 altitude in meters. offset of 500, 500 = 0m
+                  hott_eam_msg->current = 0;                                //#29 current in 0.1A steps 100 == 10,0A
+                  hott_eam_msg->main_voltage = Lipo_total * 10 ;            //#31 LSB Main power voltage using 0.1V steps 100 == 10,0V
+                  hott_eam_msg->batt_cap = 0 ;                              //#33 LSB used battery capacity in 10mAh steps
+                  hott_eam_msg->climbrate_L = 30000 ;                       //#35 climb rate in 0.01m/s. Value of 30000 = 0.00 m/s
+                  hott_eam_msg->climbrate3s = 120 ;                         //#37 climb rate in m/3sec. Value of 120 = 0m/3sec
+                  hott_eam_msg->rpm = 0 ;                                   //#38 RPM in 10 RPM steps. 300 = 3000rpm
+                  hott_eam_msg->Minutes = 0;                                //#40 Electric.Minutes (Time does start, when motor current is > 3 A)
+                  hott_eam_msg->Seconds = 0;      	                    //#41 Electric.Seconds (1 byte)
+                  hott_eam_msg->speed = gps_speed;                          //#42 LSB (air?) speed in km/h(?) we are using ground speed here per default
+				 
+  
+		  send(sizeof(struct HOTT_EAM_MSG));
+		  LEDPIN_OFF
 		  break;
-          }
-         */
+          } //end case EAM*/
+         
         
         #ifdef GAM
         case HOTT_TELEMETRY_GAM_SENSOR_ID: //0x8D
@@ -1000,7 +1041,7 @@ void GMessage::main_loop(){
             
           }
 
-          else if(id_sensor == (HOTT_TELEMETRY_GEA_SENSOR_ID & 0x0f)) {
+          else if(id_sensor == (HOTT_TELEMETRY_EAM_SENSOR_ID & 0x0f)) {
             snprintf((char *)&hott_txt_msg->text[0],21,"EAM sensor module    <");
             snprintf((char *)&hott_txt_msg->text[1],21,"Nothing here");
           }

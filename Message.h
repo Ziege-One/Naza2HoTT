@@ -27,16 +27,18 @@
 // Hott protocol v4 delay
 #define HOTTV4_TX_DELAY 650
 
-//Graupner #33620 Electric Air Module (EAM)
-#define HOTT_TELEMETRY_GEA_SENSOR_ID    0x8E // Electric Air Module ID
 #define HOTT_BINARY_MODE_REQUEST_ID	0x80
 #define HOTT_TEXT_MODE_REQUEST_ID       0x7f
+
+//Graupner # GAM module
 #define HOTT_TELEMETRY_GAM_SENSOR_ID    0x8d
 
+//Graupner # EAM module
+#define HOTT_TELEMETRY_EAM_SENSOR_ID    0x8e
+   
 //Graupner #33600 Gps module
 #define HOTT_TELEMETRY_GPS_SENSOR_ID    0x8a
-#define HOTT_GPS_SENSOR_TEXT_ID 0xA0 // GPS Module ID          
-
+          
 //Graupner #33601 Vario Module
 #define HOTT_TELEMETRY_VARIO_SENSOR_ID  0x89
 
@@ -157,6 +159,103 @@ struct HOTT_GAM_MSG {
   byte parity;                          //#45 CHECKSUM CRC/Parity (calculated dynamicaly)
 };
 
+// GEA
+struct HOTT_EAM_MSG {
+  byte start_byte;                      //#01 start byte constant value 0x7c
+  byte eam_sensor_id;             	//#02 EAM sensort id. constat value 0x8d=GENRAL AIR MODULE
+  byte warning_beeps;                   //#03 1=A 2=B ... 0x1a=Z  0 = no alarm
+					        /* VOICE OR BIP WARNINGS
+  					        Alarme sonore A.. Z, octet correspondant 1 à 26
+          					0x00  00  0  No alarm
+          					0x01  01  A  
+          					0x02  02  B  Negative Difference 2 B
+          				        0x03  03  C  Negative Difference 1 C
+          					0x04  04  D  
+          					0x05  05  E  
+          					0x06  06  F  Min. Sensor 1 temp. F
+          					0x07  07  G  Min. Sensor 2 temp. G
+          					0x08  08  H  Max. Sensor 1 temp. H
+              				        0x09  09  I  Max. Sensor 2 temp. I
+              					0xA   10  J  Max. Sens. 1 voltage J
+        					0xB   11  K  Max. Sens. 2 voltage K
+        		                        0xC   12  L  
+        					0xD   13  M  Positive Difference 2 M
+        					0xE   14  N  Positive Difference 1 N
+        					0xF   15  O  Min. Altitude O
+        					0x10  16  P  Min. Power Voltage P    // We use this one for Battery Warning
+        					0x11  17  Q  Min. Cell voltage Q
+        					0x12  18  R  Min. Sens. 1 voltage R
+        					0x13  19  S  Min. Sens. 2 voltage S
+        					0x14  20  T  Minimum RPM T
+        					0x15  21  U  
+        					0x16  22  V  Max. used capacity V
+        					0x17  23  W  Max. Current W
+        					0x18  24  X  Max. Power Voltage X
+        					0x19  25  Y  Maximum RPM Y
+        					0x1A  26  Z  Max. Altitude Z
+        				        */
+  byte sensor_id;             	        //#04 constant value 0xe0
+  byte alarm_invers1;                   //#05 alarm bitmask. Value is displayed inverted
+				          //Bit#  Alarm field
+					  // 0    all cell voltage
+					  // 1    Battery 1
+					  // 2    Battery 2
+					  // 3    Temperature 1
+					  // 4    Temperature 2
+					  // 5    Fuel
+					  // 6    mAh
+					  // 7    Altitude
+  byte alarm_invers2;                   //#06 alarm bitmask. Value is displayed inverted
+    					  //Bit#  Alarm Field
+    					  // 0    main power current
+    					  // 1    main power voltage
+    					  // 2    Altitude
+    					  // 3    m/s                            
+      					  // 4    m/3s
+      					  // 5    unknown
+    					  // 6    unknown
+    					  // 7    "ON" sign/text msg active
+  byte cell_L[7];			//#7 Volt Cell_L 1 (in 2 mV increments, 210 == 4.20 V)
+				        //#8 Volt Cell_L 2 (in 2 mV increments, 210 == 4.20 V)
+				        //#9 Volt Cell_L 3 (in 2 mV increments, 210 == 4.20 V)
+				        //#10 Volt Cell_L 4 (in 2 mV increments, 210 == 4.20 V)
+					//#11 Volt Cell_L 5 (in 2 mV increments, 210 == 4.20 V)
+					//#12 Volt Cell_L 6 (in 2 mV increments, 210 == 4.20 V)
+                                        //#13 Volt Cell_L 7 (in 2 mV increments, 210 == 4.20 V)
+  byte cell_H[7];			//#14 Volt Cell_L 1 (in 2 mV increments, 210 == 4.20 V)
+				        //#15 Volt Cell_H 2 (in 2 mV increments, 210 == 4.20 V)
+				        //#16 Volt Cell_H 3 (in 2 mV increments, 210 == 4.20 V)
+				        //#17 Volt Cell_H 4 (in 2 mV increments, 210 == 4.20 V)
+					//#18 Volt Cell_H 5 (in 2 mV increments, 210 == 4.20 V)
+					//#19 Volt Cell_H 6 (in 2 mV increments, 210 == 4.20 V)
+                                        //#20 Volt Cell_H 7 (in 2 mV increments, 210 == 4.20 V)   
+  uint16_t  Battery1;                   //#21 LSB battery 1 voltage LSB value. 0.1V steps. 50 = 5.5V only pos. voltages
+				        //#22 MSB 
+  uint16_t  Battery2;                   //#23 LSB battery 2 voltage LSB value. 0.1V steps. 50 = 5.5V only pos. voltages
+					//#24 MSB
+  byte temperature1;                    //#25 Temperature 1. Offset of 20. a value of 20 = 0°C
+  byte temperature2;                    //#26 Temperature 2. Offset of 20. a value of 20 = 0°C
+  uint16_t altitude;                    //#27 altitude in meters. offset of 500, 500 = 0m
+				        //#28 MSB  
+  uint16_t current;                     //#29 current in 0.1A steps 100 == 10,0A
+				        //#30 MSB current display only goes up to 99.9 A (continuous)
+  uint16_t main_voltage;            	//#31 LSB Main power voltage using 0.1V steps 100 == 10,0V
+					//#32 MSB (Appears in GAM display right as alternate display.)
+  uint16_t batt_cap;                    //#33 LSB used battery capacity in 10mAh steps
+					//#34 MSB 
+  uint16_t climbrate_L;                 //#35 climb rate in 0.01m/s. Value of 30000 = 0.00 m/s
+				        //#36 MSB
+  byte climbrate3s;                     //#37 climb rate in m/3sec. Value of 120 = 0m/3sec
+  uint16_t rpm;                         //#38 RPM in 10 RPM steps. 300 = 3000rpm
+				        //#39 MSB
+  byte Minutes;                  	//#40 Electric.Minutes (Time does start, when motor current is > 3 A)
+  byte Seconds;      	                //#41 Electric.Seconds (1 byte)
+  uint16_t speed;                       //#42 LSB (air?) speed in km/h(?) we are using ground speed here per default
+					//#43 MSB speed  
+  byte stop_byte;                       //#44 stop byte 0x7D
+  byte parity;                          //#45 CHECKSUM CRC/Parity (calculated dynamicaly)
+  
+};
 
 // GPS MODULE #33600
 struct HOTT_GPS_MSG{
@@ -302,6 +401,7 @@ private:
   char * _hott_invert_all_chars(char *str);
   char * _hott_invert_chars(char *str, int cnt);
   void init_gam_msg();
+  void init_eam_msg();
   void init_gps_msg();
   void init_vario_msg();
   void send(int lenght);
