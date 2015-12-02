@@ -1,6 +1,6 @@
 /*
-   LIPOMETER v1.0
-   http://johnlenfr.1s.fr
+   Naza2HoTT
+   Ziege-One
    v1.0
  
  Arduino pro Mini 5v/16mHz w/ Atmega 328

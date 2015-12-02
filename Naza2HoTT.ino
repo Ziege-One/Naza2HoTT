@@ -1,31 +1,18 @@
 /*
-   DJILEDS+LIPOMETER
-   http://johnlenfr.1s.fr
-   v6.0
+   Naza2HoTT
+   Ziege-One
+   v1.0
  
  Arduino pro Mini 5v/16mHz w/ Atmega 328
+
  
-V4 incorporating the latest Lipomètre of Thyzoon v0.531 (October 2013) with low voltage alarm management.
- 
-  Added detection GPS DJI Naza.
- 
-  Youtube link demonstration:
- 
- http://
- 
- !!WARNING!!
- When using Arduino Board that have USB on board such a connection with a common RX/TX line does not work.
- The RX/TX on the Arduino are internally connected to the USB.
- I now used a Mini Pro 328 that has no USB on board and it works like a charm!
- (So DON'T USE Arduino UNO or similar boards, it will not work)
- 
- /////PIN MAPPING////
- D0: RX Serial
- D1: TX Serial
- D2: Remote Control (detecting interupt whith a button on the radio)
- D3: 
- D4: RX Softserial
- D5: TX Softserial
+ /////Pin Belegung////
+ D0: 
+ D1: 
+ D2: 
+ D3: RX / TX Softserial HoTT V4
+ D4: 
+ D5: 
  D6: 
  D7: 
  D8: 
@@ -33,19 +20,19 @@ V4 incorporating the latest Lipomètre of Thyzoon v0.531 (October 2013) with low
  D10: 
  D11: 
  D12: 
- D13: green led to visualize communication
+ D13: LED, um die Kommunikation zu visualisieren
  
  A0: Lipo 1S
  A1: Lipo 2S
  A2: Lipo 3S
  A3: Lipo 4S
- A4: SDA not used (Can be use for I2C communications with sensors or for Lipo 5S) Support I2C (TWI) communication using the Wire library.
- A5: SCL not used (Can be use for I2C communications with sensors or for Lipo 6S) Support I2C (TWI) communication using the Wire library.
+ A4: 
+ A5: 
  
  
  */
  
-// ======== LIPOMETRE  =======================================
+// ======== Naza2HoTT  =======================================
 
 #include <EEPROM.h>
 #include <SoftwareSerial.h>

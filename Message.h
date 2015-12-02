@@ -1,6 +1,6 @@
 /*
-   LIPOMETER v1.0
-   http://johnlenfr.1s.fr
+   Naza2HoTT
+   Ziege-One
    v1.0
  
  Arduino pro Mini 5v/16mHz w/ Atmega 328
@@ -30,16 +30,16 @@
 #define HOTT_BINARY_MODE_REQUEST_ID	0x80
 #define HOTT_TEXT_MODE_REQUEST_ID       0x7f
 
-//Graupner # GAM module
+//Graupner #General Air Module (GAM) 
 #define HOTT_TELEMETRY_GAM_SENSOR_ID    0x8d
 
-//Graupner # EAM module
+//Graupner # Electric Air Module module (EAM)
 #define HOTT_TELEMETRY_EAM_SENSOR_ID    0x8e
    
-//Graupner #33600 Gps module
+//Graupner # GPS Module (GPS)
 #define HOTT_TELEMETRY_GPS_SENSOR_ID    0x8a
           
-//Graupner #33601 Vario Module
+//Graupner # Vario Sensor Module (VARIO)
 #define HOTT_TELEMETRY_VARIO_SENSOR_ID  0x89
 
 // String for text mode
