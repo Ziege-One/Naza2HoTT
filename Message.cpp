@@ -12,8 +12,9 @@
 #define LEDPIN_ON               PORTB |= (1<<5);
 
 // Module define
-#define GPS                             // GPS Modul
-#define GAM                             // GAM Modul
+#define GPS_on                             // GPS Modul
+#define GAM_on                             // GAM Modul
+#define EAM_on                             // EAM Modul
 
 #include "Message.h"
 #include "Tension_Lipo.h"
@@ -274,7 +275,7 @@ void GMessage::main_loop(){
         // Demande RX Module =	$80 $XX
         switch (octet2) {
         
-          #ifdef GPS
+          #ifdef GPS_on
           case HOTT_TELEMETRY_GPS_SENSOR_ID: //0x8A
           {  
           //LEDPIN_ON
@@ -428,7 +429,7 @@ void GMessage::main_loop(){
 		  break;
           }
          */
-         
+        #ifdef EAM_on
         case HOTT_TELEMETRY_EAM_SENSOR_ID: //0x8E
           {  
 		  LEDPIN_ON
@@ -469,10 +470,11 @@ void GMessage::main_loop(){
 		  send(sizeof(struct HOTT_EAM_MSG));
 		  LEDPIN_OFF
 		  break;
-          } //end case EAM*/
-         
+          }
+          //end case EAM*/
+         #endif
         
-        #ifdef GAM
+        #ifdef GAM_on
         case HOTT_TELEMETRY_GAM_SENSOR_ID: //0x8D
           {    
                LEDPIN_ON
@@ -715,6 +717,7 @@ void GMessage::main_loop(){
         }
         else
         {
+          #ifdef GAM_on
           if (id_sensor == (HOTT_TELEMETRY_GAM_SENSOR_ID & 0x0f)) 
           {
             switch (page_settings) { //SETTINGS
@@ -838,9 +841,10 @@ void GMessage::main_loop(){
             }//END SETTINGS
 
           } // END IF
-          
+          #endif
           //********************************************************************************************************************
-          else if(id_sensor == (HOTT_TELEMETRY_GPS_SENSOR_ID & 0x0f)) {
+          #ifdef GPS_on
+          if(id_sensor == (HOTT_TELEMETRY_GPS_SENSOR_ID & 0x0f)) {
             
             switch (page_settings) { //SETTINGS
               
@@ -1040,15 +1044,19 @@ void GMessage::main_loop(){
              
             
           }
-
-          else if(id_sensor == (HOTT_TELEMETRY_EAM_SENSOR_ID & 0x0f)) {
+          #endif
+          #ifdef EAM_on
+          if(id_sensor == (HOTT_TELEMETRY_EAM_SENSOR_ID & 0x0f)) {
             snprintf((char *)&hott_txt_msg->text[0],21,"EAM sensor module    <");
             snprintf((char *)&hott_txt_msg->text[1],21,"Nothing here");
           }
-          else if(id_sensor == (HOTT_TELEMETRY_VARIO_SENSOR_ID & 0x0f)) {         
+          #endif
+          #ifdef Vario_on
+          if(id_sensor == (HOTT_TELEMETRY_VARIO_SENSOR_ID & 0x0f)) {         
             snprintf((char *)&hott_txt_msg->text[0],21,"VARIO sensor module  <");
             snprintf((char *)&hott_txt_msg->text[1],21,"Nothing here");
           }
+          #endif
           else {
             snprintf((char *)&hott_txt_msg->text[0],21,"Unknow sensor module <");
             snprintf((char *)&hott_txt_msg->text[1],21,"Nothing here");
