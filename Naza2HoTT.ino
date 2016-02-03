@@ -22,12 +22,12 @@
  D12: 
  D13: LED, um die Kommunikation zu visualisieren
  
- A0: Lipo 1S
- A1: Lipo 2S
- A2: Lipo 3S
- A3: Lipo 4S
+ A0: Eingang Spannung 0-5V
+ A1: Eingang Strom 0-5V
+ A2: 
+ A3: 
  A4: 
- A5: 
+ A5:  
  
  
  */
@@ -37,7 +37,6 @@
 #include <EEPROM.h>
 #include <SoftwareSerial.h>
 #include "Message.h"
-#include "Tension_Lipo.h"
 #include <inttypes.h>
 
 // Green LED on pin 13
@@ -46,7 +45,7 @@
 #define LEDPIN_OFF        PORTB &= ~(1<<5);
 #define LEDPIN_ON         PORTB |= (1<<5);
 
-//#define Debug                             // on off debuging
+#define Debug                             // on off debuging
 
 // Time interval [ms] for display updates:
 const unsigned long DISPLAY_INTERVAL = 5000;
