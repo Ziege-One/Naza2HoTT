@@ -62,6 +62,11 @@ int alarm_interval = 15000; // in ms
 static unsigned long lastTime=0;  // in ms
 unsigned long time=millis();      // in ms
 
+// Timer for stopwatch
+static unsigned long laststopwatch=0;  // in ms
+unsigned long stopwatch_ms;            //in ms
+static unsigned long stopwatch_time;   //in ms
+
 // Messbereiche im Eprom
 int Volt_Offset;
 int Volt_COEF;
@@ -253,6 +258,7 @@ void GMessage::main_loop(){
   lipo.ReadSensor(); //Spannung und Strom Werte einlesen
   decode_gps_naza();             // record infos from the GPS
   update_table_altitude();       // update altitudes every 1s
+  update_stopwatch();            // Stopwatch for EAM second and minute
   
   if( is_set_home==0 && gps_fix>=3 && gps_numsats>=6){ // FIX 3D mode or DGPS  (we need at least 6 satellites to calculate an accurate home position)
     home_lat = lat;
@@ -459,10 +465,25 @@ void GMessage::main_loop(){
                   hott_eam_msg->climbrate_L = 30000 ;                       //#35 climb rate in 0.01m/s. Value of 30000 = 0.00 m/s
                   hott_eam_msg->climbrate3s = 120 ;                         //#37 climb rate in m/3sec. Value of 120 = 0m/3sec
                   hott_eam_msg->rpm = 0 ;                                   //#38 RPM in 10 RPM steps. 300 = 3000rpm
-                  hott_eam_msg->Minutes = 0;                                //#40 Electric.Minutes (Time does start, when motor current is > 3 A)
-                  hott_eam_msg->Seconds = 0;      	                        //#41 Electric.Seconds (1 byte)
+                  hott_eam_msg->Minutes = (stopwatch_time / 1000) / 60;               //#40 Electric.Minutes (Time does start, when motor current is > 3 A)
+                  hott_eam_msg->Seconds = (stopwatch_time / 1000) % 60;               //#41 Electric.Seconds (1 byte)
                   hott_eam_msg->speed = gps_speed;                          //#42 LSB (air?) speed in km/h(?) we are using ground speed here per default
-				 
+		
+            // Alarmmanagement
+               time=millis();
+               if (time-lastTime>alarm_interval)  // if at least alarm_interval in ms have passed
+               {
+                     // Check for alarm beep
+                     if (((lipo.getVolt ()*100) < alarm_min_volt) && alarm_on_off_batt1 == 1)
+                     {
+                     hott_txt_msg->warning_beeps =  0x10    ; // alarm beep or voice
+                     }
+                     if (((lipo.getBattCap()) > alarm_max_used) && alarm_on_off_batt1 == 1)
+                     {
+                     hott_txt_msg->warning_beeps =  0x16    ; // alarm beep or voice
+                     }                      
+                 lastTime=time;  // reset timer
+               }		 
   
 		  send(sizeof(struct HOTT_EAM_MSG));
 		  LEDPIN_OFF
@@ -483,9 +504,9 @@ void GMessage::main_loop(){
                   hott_vario_msg->m1s = 30000 ;       //#12 LSB 48 Low Byte m/s resolution 0.01m 48 = 30000 = 0.00m/s (1=0.01m/s)
                   hott_vario_msg->m3s = 120 ;       //#14 LSB 48 Low Byte m/3s resolution 0.01m 48 = 30000 = 0.00m/s (1=0.01m/3s)
                   hott_vario_msg->m10s = 120 ;           //#16 LSB 48 Low Byte m/10s resolution 0.01m 48 = 30000 = 0.00m/s (1=0.01m/10s)
-                  //hott_vario_msg->text[24] = "hallo";     //#18: 0 ASCII [1]
+                
                   memset(hott_vario_msg->text,0x20,24);
-                  snprintf((char*)hott_vario_msg->text,24, "Naza2HoTT by Ziege-One");
+                  snprintf((char*)hott_vario_msg->text,24, "Naza2HoTT v3.0");
         
        
         send(sizeof(struct HOTT_VARIO_MSG));
@@ -655,7 +676,7 @@ void GMessage::main_loop(){
                     //line 6:
                     snprintf((char *)&hott_txt_msg->text[6],21," Alarm repeat: %is",(alarm_interval/1000));
                     //line 7:
-                    snprintf((char *)&hott_txt_msg->text[7],21,"Strom2HoTT  %d/2",page_settings); //Showing page number running down the screen to the right
+                    snprintf((char *)&hott_txt_msg->text[7],21,"Naza2HoTT v3.0  %d/2",page_settings); //Showing page number running down the screen to the right
                     
                     hott_txt_msg->text[ligne_select][0] = '>';
                     _hott_invert_ligne(ligne_edit);
@@ -797,7 +818,7 @@ void GMessage::main_loop(){
                     //line 6:
                     snprintf((char *)&hott_txt_msg->text[6],21," Cur. COEF: %i/10mA",(Current_COEF));
                     //line 7:
-                    snprintf((char *)&hott_txt_msg->text[7],21,"Strom2HoTT  %d/2",page_settings); //Showing page number running down the screen to the right
+                    snprintf((char *)&hott_txt_msg->text[7],21,"Naza2HoTT v3.0  %d/2",page_settings); //Showing page number running down the screen to the right
                     int Volt_Offset;
 
                     hott_txt_msg->text[ligne_select][0] = '>';
@@ -855,7 +876,7 @@ void GMessage::main_loop(){
                     //line 6:
                     snprintf((char *)&hott_txt_msg->text[6],21,"E %id %i' %i.%i\"",lon_home_D,lon_home_M,lon_home_S,lon_home_SS);
                     //line 7:
-                    snprintf((char *)&hott_txt_msg->text[7],21,"Naza2HoTT  %d/4",page_settings); //Showing page number running down the screen to the right
+                    snprintf((char *)&hott_txt_msg->text[7],21,"Naza2HoTT v3.0  %d/4",page_settings); //Showing page number running down the screen to the right
                     
                     //hott_txt_msg->text[ligne_select][0] = '>';
                     //_hott_invert_ligne(ligne_edit);
@@ -903,7 +924,7 @@ void GMessage::main_loop(){
                     //line 6:
                     snprintf((char *)&hott_txt_msg->text[6],21,"Maximum Speed: %ikm/h",(int) gps_speed_max);
                     //line 7:
-                    snprintf((char *)&hott_txt_msg->text[7],21,"Naza2HoTT  %d/4",page_settings); //Showing page number running down the screen to the right
+                    snprintf((char *)&hott_txt_msg->text[7],21,"Naza2HoTT v3.0  %d/4",page_settings); //Showing page number running down the screen to the right
                     
                     //hott_txt_msg->text[ligne_select][0] = '>';
                     //_hott_invert_ligne(ligne_edit);
@@ -952,7 +973,7 @@ void GMessage::main_loop(){
                     //line 6:
                     snprintf((char *)&hott_txt_msg->text[6],21,"Diff./3Sec  : %i",(altitude_table[0] - altitude_table[3]));
                     //line 7:
-                    snprintf((char *)&hott_txt_msg->text[7],21,"Naza2HoTT  %d/4",page_settings); //Showing page number running down the screen to the right
+                    snprintf((char *)&hott_txt_msg->text[7],21,"Naza2HoTT v3.0  %d/4",page_settings); //Showing page number running down the screen to the right
                     
                     //hott_txt_msg->text[ligne_select][0] = '>';
                     //_hott_invert_ligne(ligne_edit);
@@ -1001,7 +1022,7 @@ void GMessage::main_loop(){
                     //line 6:
                     snprintf((char *)&hott_txt_msg->text[6],21,"COG: %i",(int) gps_cog);
                     //line 7:
-                    snprintf((char *)&hott_txt_msg->text[7],21,"Naza2HoTT %d/4",page_settings); //Showing page number running down the screen to the right
+                    snprintf((char *)&hott_txt_msg->text[7],21,"Naza2HoTT v3.0 %d/4",page_settings); //Showing page number running down the screen to the right
                     
                     //hott_txt_msg->text[ligne_select][0] = '>';
                     //_hott_invert_ligne(ligne_edit);
@@ -1150,6 +1171,15 @@ uint32_t GMessage::seconds() {
   return millis() / 1000;
 }
 
+void GMessage::update_stopwatch()
+{
+  time=millis();
+  stopwatch_ms = time - laststopwatch;                // time between last call 
+  laststopwatch = time;
+  if (lipo.getCurrent() > 3)                          // when motor current is > 3 A timer run
+      stopwatch_time = stopwatch_time + stopwatch_ms; // add  time between last call to stopwatch_time
+}
+
 void GMessage::update_table_altitude()
 {
   static uint32_t table_now = 0;
@@ -1269,4 +1299,5 @@ void GMessage::debug(){
     Serial.print("BattCap:"); Serial.print(lipo.getBattCap(), 0);Serial.println("mA");
     Serial.print("VCC:"); Serial.print(lipo.getVCC(), 2);Serial.println("V");
     Serial.print("Temp:"); Serial.print(lipo.getTemp(), 2);Serial.println("*C");
+    
 }

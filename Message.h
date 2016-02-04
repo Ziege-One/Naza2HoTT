@@ -484,25 +484,7 @@ private:
   void init_gps_msg();
   void init_vario_msg();
   void send(int lenght);
-  void send2();
-  void  _hott_send_msg2(byte *buffer, int len) ;
-  void _hott_send_text_msg2();
   void _hott_invert_ligne(int ligne) ;
-  void setMainVoltage(float tension);
-  void setVoltage1(float volt);
-  void setVoltage2(float volt);
-  void setLipo(float volt,int lipo);
-  void setAmpere(uint16_t amp);
-  void setMilliAmpere(uint16_t mA);
-  void setAltitudeInMeters(uint16_t alti);
-  void setClimbrate(uint16_t sr);
-  void setClimbrate_M3(int srmmm);
-  void setSpeed(float speed);
-  void setTemp (int temp, int capteur);
-  void setFuelPercent(uint8_t pourcent);
-  void setFuelMilliliters(uint16_t ml);
-  void setRPM(uint16_t rpm);
-  void alarme(uint8_t son);
   uint16_t read_eprom(int address);
   void write_eprom(int address,uint16_t val) ;
   
@@ -513,14 +495,12 @@ private:
   void update_table_altitude();
   uint32_t calculateDistance();
   float calculateAngle ();
+  void update_stopwatch();
 
 public:
   GMessage();
   void init();
   void main_loop();
-  int get_delay(void);
-  int get_fade_step(void);
-  int pwm_size(void);
   void debug();
 
   // Messbereiche im Eprom
